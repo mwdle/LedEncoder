@@ -5,7 +5,7 @@ Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 
 </p>        
 
 # Specifications and Pinout
-All builds were created and tested using the PlatformIO IDE extension for VSCode and Espressif ESP8266 12-E board, mileage may vary on other boards and IDE's.
+All builds were created and tested using the PlatformIO IDE extension for VSCode and Espressif ESP8266 12-E board, mileage may vary using other boards and IDE's.
 The following libraries are required (for basic and network functions):
 * [Elegant OTA](https://github.com/ayushsharma82/ElegantOTA)
 * [WebSerial](https://github.com/ayushsharma82/WebSerial)
