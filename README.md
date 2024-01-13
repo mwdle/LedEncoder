@@ -1,5 +1,8 @@
 # LedEncoder
-Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder.
+Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder.    <br><br>    
+<p align="center">
+  <img src="demo.gif" alt="animated" />
+</p>        
 # Specifications and Pinout
 This program has only been tested using PlatformIO IDE on an Espressif ESP8266 12-E board.    
 The following libraries are required (and specified in :
