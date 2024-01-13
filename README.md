@@ -1,7 +1,16 @@
 # LedEncoder
-Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder.
+Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder.    <br><br>    
+<p align="center">
+  <img src="demo.gif" alt="animated" />
+</p>        
+
 # Specifications and Pinout
-This program has only been tested using PlatformIO IDE on an Espressif ESP8266 12-E board. It relies on the ElegantOTA (https://github.com/ayushsharma82/ElegantOTA), WebSerial (https://github.com/ayushsharma82/WebSerial), and EncoderStepCounter (https://github.com/M-Reimer/EncoderStepCounter) libraries.
+This program has only been tested using PlatformIO IDE on an Espressif ESP8266 12-E board.    
+The following libraries are required (and specified in :
+* [Elegant OTA](https://github.com/ayushsharma82/ElegantOTA)
+* [WebSerial](https://github.com/ayushsharma82/WebSerial)
+* [EncoderStepCounter](https://github.com/M-Reimer/EncoderStepCounter)
+* [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
 ## Pinout Info:
 * ENCODER_PIN1 is the 'a' pin on your rotary encoder. This program uses pin 4, which corresponds to pin D2 on the ESP8266 12-E.
 * ENCODER_PIN2 is the 'b' pin on your rotary encoder. This program uses pin 5, which corresponds to pin D1 on the ESP8266 12-E.
