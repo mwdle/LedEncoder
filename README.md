@@ -19,5 +19,5 @@ The following libraries are required (for basic and network functions):
 * greenPin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin 12, which corresponds to pin D6 on the ESP8266 12-E.
 * bluePin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin 13, which corresponds to pin D7 on the ESP8266 12-E.
 ## Network Info:
-If you want WebSerial and ElegantOTA Connectivity, change the ssid and password variables to match your network settings. You may also need to change the subnet, gateway, and local_ip variables.    <br>    
+If you want WebSerial and ElegantOTA Connectivity, change the ssid and password variables in main.cpp to match your network settings. You may also need to change the subnet, gateway, and local_ip variables.    <br>    
 Otherwise, to save flash space on your board you can safely remove these three dependencies: _ElegantOTA, WebSerial, & ESPAsyncWebServer_ from platformio.ini as well as any corresponding code in main.cpp.
