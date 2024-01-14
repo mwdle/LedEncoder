@@ -1,4 +1,4 @@
-# LedEncoder
+# RotaryHueControl
 Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder.    <br><br>    
 <p align="center">
   <img src="demo.gif" alt="animated" />
