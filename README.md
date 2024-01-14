@@ -6,11 +6,18 @@ Allows for gradient color control of a Common Anode RGB LED diode using a 5 pin 
 
 # Specifications and Pinout
 All builds were created and tested using the PlatformIO IDE extension for VSCode and Espressif ESP8266 12-E board paired with a rotary encoder from an old alarm clock. Mileage may vary using other boards, IDE's and rotary encoders.    <br><br>    
+
 The following libraries are required (for basic and network functions):
 * [Elegant OTA](https://github.com/ayushsharma82/ElegantOTA)
 * [WebSerial](https://github.com/ayushsharma82/WebSerial)
 * [EncoderStepCounter](https://github.com/M-Reimer/EncoderStepCounter)
-* [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+* [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)    <br><br>
+
+The program works by representing a rotary encoder value between 0-360 as a hue in the HSV cylindrical color format.    <br><br>    
+
+### Coming Soon:
+* Brightness adjustment functionality using a secondary potentiometer dial.    <br><br>    
+
 ## Pinout Info:
 * ENCODER_PIN1 is the 'a' pin on your rotary encoder. This program uses pin 4, which corresponds to pin D2 on the ESP8266 12-E.
 * ENCODER_PIN2 is the 'b' pin on your rotary encoder. This program uses pin 5, which corresponds to pin D1 on the ESP8266 12-E.
