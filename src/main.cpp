@@ -157,7 +157,7 @@ void loop(void) {
     encoder.tick();
     // read encoder position and adjust LED color if necessary
     signed char pos = encoder.getPosition() / 3;
-    // Read Potentiometer position:
+    // Read Potentiometer position and adjust LED color if necessary
     int potPos = map(analogRead(pot), 0, 1024, 0, 100);
     if (lightIsOn && (pos != lastpos || potPos != lastPotPos)) {
       lastpos = pos;
@@ -181,7 +181,7 @@ void loop(void) {
               lightIsOn = false;
           }
           else {
-              HSVtoRGB(map(lastpos, -42, 42, 60, 330), 100.0, 100.0);
+              HSVtoRGB(map(lastpos, -42, 42, 60, 330), 100.0, lastPotPos);
               setColor(red, green, blue);
               lightIsOn = true;
           }
