@@ -11,16 +11,16 @@
 #include <WebSerial.h>
 #include <EncoderStepCounter.h>
 
-using std::smatch;
-using std::regex;
-using std::regex_match;
-using std::stod;
-using std::string;
-
 #define encoderPin1 D2
 #define encoderPin2 D1
 #define button D3
 #define pot A0
+#define errorLed 16
+
+using std::smatch;
+using std::regex;
+using std::regex_match;
+using std::string;
 
 // Internet related setup:
 const char* ssid = "";
@@ -49,22 +49,22 @@ const int greenPin1 = D6;
 bool lightIsOn = true;
 volatile bool buttonClicked = false;
 
-// Onboard RED led:
-const int errorLED = 16;
-
 struct RGB {
-  double r, g, b;
-  RGB(double _r, double _g, double _b) {
+  int r, g, b;
+  RGB(int _r, int _g, int _b) {
     r = _r;
     g = _g;
     b = _b;
   }
 };
 
+RGB currentColor(255, 0, 0);
+RGB off(0, 0, 0);
+
 // Converts HSV into RGB and returns the result.
 RGB hsvToRgb(double H, double S, double V) {
   if(H>360 || H<0 || S>100 || S<0 || V>100 || V<0){
-      return {0.0, 0.0, 0.0};
+      return {0, 0, 0};
   }
   float s = S/100;
   float v = V/100;
@@ -90,7 +90,7 @@ RGB hsvToRgb(double H, double S, double V) {
   else{
       r = C,g = 0,b = X;
   }
-  return {(r+m)*255, (g+m)*255, (b+m)*255};
+  return {(int)((r+m)*255), (int)((g+m)*255), (int)((b+m)*255)};
 }
 
 // Set given rgb colors to the given rgb pins.
@@ -102,42 +102,51 @@ void setColor(int red, int green, int blue, int rpin, int gpin, int bpin) {
 
 // Handles encoder button presses.
 void IRAM_ATTR buttonPressed() {
-  buttonClicked = true;
+  if (millis() - lastButtonPress > 500) {
+    buttonClicked = true;
+    lastButtonPress = millis();
+  }
 }
 
 // Handles incoming commands from WebSerial.
 // Supports "/color <r> <g> <b>" for changing LED colors.
 // Supports "/restart" for restarting the ESP device.
+// Littered with ESP.wdtFeed() (resets the software watchdog timer), preventing unexpected resets during delays handling many messages in succession.
 void recvMsg(uint8_t *data, size_t len) {
-  WebSerial.print("New message: ");
-  string d = "";
+  string msg;
+  msg.reserve(len);
   for(size_t i=0; i < len; i++){
-    d += char(data[i]);
+    msg += char(data[i]);
     ESP.wdtFeed();
   }
   // Regex for /color <r> <g> <b> and /restart commands available via WebSerial.
-  regex colorCmd(R"(/color (\d+),? (\d+),? (\d+),? ?)");
+  regex colorCmd(R"(^/color (\d{1,3}) (\d{1,3}) (\d{1,3})$)");
   regex restartCmd(R"(/restart)");
+  regex stateCmd(R"(/state)");
   smatch match;
   ESP.wdtFeed();
   // If the data matches one of the predefined commands, handle it accordingly
-  if (regex_match(d, match, colorCmd)) {
+  if (regex_match(msg, match, colorCmd)) {
     ESP.wdtFeed();
-    RGB color(stod(match[1]), stod(match[2]), stod(match[3]));
-    setColor(color.r, color.g, color.b, redPin1, greenPin1, bluePin1);
-    WebSerial.printf("\nColor command issued. The new color: (%d, %d, %d) has been set.\n", (int)color.r, (int)color.g, (int)color.b);
+    currentColor.r = constrain(stoi(match[1]), 0, 255); 
+    currentColor.g = constrain(stoi(match[2]), 0, 255); 
+    currentColor.b = constrain(stoi(match[3]), 0, 255);
+    ESP.wdtFeed();
+    setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+    WebSerial.printf("Color command received. The new color: (%d, %d, %d) has been set.\n", currentColor.r, currentColor.g, currentColor.b);
   }
-  else if (regex_match(d, match, restartCmd)) {
-    WebSerial.println("\nRestart command issued. Restarting . . . \n");
+  else if (regex_match(msg, match, restartCmd)) {
+    WebSerial.println("Restart command received. Restarting . . . \n");
     ESP.restart();
-  }   
-  else WebSerial.println(d.c_str());
+  }  
+  else if (regex_match(msg, match, stateCmd)) WebSerial.printf("The light is%s on.\n", lightIsOn?"":" not");
+  else { WebSerial.print("New message: "); WebSerial.println(msg.c_str()); }
   ESP.wdtFeed();
 }
 
 void setup(void) {
   // Initialize Error LED Pin
-  pinMode(errorLED, OUTPUT); 
+  pinMode(errorLed, OUTPUT); 
 
   Serial.begin(115200);
 
@@ -150,12 +159,12 @@ void setup(void) {
   WiFi.begin(ssid, password);
   while(WiFi.status() != WL_CONNECTED)
   {
-    digitalWrite(errorLED, LOW);   // Turn on the red onboard LED by making the voltage LOW
+    digitalWrite(errorLed, LOW);   // Turn on the red onboard LED by making the voltage LOW
     delay(500);                    
-    digitalWrite(errorLED, HIGH);  // Turn off the red onboard LED by making the voltage HIGH
+    digitalWrite(errorLed, HIGH);  // Turn off the red onboard LED by making the voltage HIGH
     delay(800);
   }
-  digitalWrite(errorLED, HIGH);
+  digitalWrite(errorLed, HIGH);
   Serial.println("Wifi Connected! IP Address: " + WiFi.localIP().toString());
 
   // Initialize ElegantOTA
@@ -178,11 +187,11 @@ void setup(void) {
   pinMode(button, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(button), buttonPressed, FALLING);
 
-  // Initialize rotary encoder to lowest position (-128 == red color)
+  // Initialize rotary encoder to lowest position (-128 == red LED color)
   encoder.begin();
   encoder.setPosition(-128);
 
-  setColor(255, 0, 0, redPin1, greenPin1, bluePin1);
+  setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
 }
 
 void loop(void) {
@@ -190,8 +199,8 @@ void loop(void) {
 
   if(millis() - lastWifiCheck > 3000) {
     lastWifiCheck = millis();
-    if (WiFi.status() != WL_CONNECTED) digitalWrite(errorLED, LOW); // Turn on the red onboard LED by making the voltage LOW            
-    else digitalWrite(errorLED, HIGH); // Turn off the red onboard LED by making the voltage HIGH
+    if (WiFi.status() != WL_CONNECTED) digitalWrite(errorLed, LOW); // Turn on red onboard LED by setting voltage LOW            
+    else digitalWrite(errorLed, HIGH); // Turn off red onboard LED by setting voltage HIGH
   } 
 
   if (buttonClicked) {
@@ -204,7 +213,7 @@ void loop(void) {
     buttonClicked = false;
   }
 
-  // Check Potentiometer position (my potentiometer is finicky so I constrain its minimum to 23.)
+  // Check Potentiometer position (my potentiometer is finicky so I constrain its minimum to 23 to ensure it turns off the RGB led completely at its minimum state.)
   int potPos = lastPotPos;
   if (millis() - lastPotPoll > 50) {
     lastPotPoll = millis();
@@ -212,18 +221,22 @@ void loop(void) {
   }
 
   // Read encoder position and adjust LED color if necessary
-  encoder.tick();
-  signed char pos = encoder.getPosition();
   if (lightIsOn) {
+      encoder.tick();
+      signed char pos = encoder.getPosition();
     if (pos != lastEncoderPos || potPos != lastPotPos) {
       lastEncoderPos = pos; lastPotPos = potPos;
-      RGB color = hsvToRgb(map(lastEncoderPos, -128, 127, 0, 360), 100.0, lastPotPos);
-      setColor(color.r, color.g, color.b, redPin1, greenPin1, bluePin1);
-      WebSerial.printf("R: %d   G: %d   B: %d\n", (int)color.r, (int)color.g, (int)color.b);
+      currentColor = hsvToRgb(map(lastEncoderPos, -128, 127, 0, 360), 100.0, lastPotPos);
+      setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+      WebSerial.printf("R: %d   G: %d   B: %d\n", currentColor.r, currentColor.g, currentColor.b);
     }
   }
   else {
-    RGB color = hsvToRgb(0.0, 0.0, 0.0);
-    setColor(color.r, color.g, color.b, redPin1, greenPin1, bluePin1);
+    if (!(currentColor.r == off.r && currentColor.g == off.g && currentColor.b == off.b)) {
+      currentColor.r = off.r;
+      currentColor.g = off.g;
+      currentColor.b = off.b;
+      setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+    }
   }
 }
