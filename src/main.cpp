@@ -15,7 +15,7 @@
 #define encoderPin2 D1
 #define button D3
 #define pot A0
-#define errorLed 16
+#define errorLed D0
 
 using std::smatch;
 using std::regex;
