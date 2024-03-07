@@ -213,7 +213,7 @@ void loop(void) {
     buttonClicked = false;
   }
 
-  // Check Potentiometer position (my potentiometer is finicky so I constrain its minimum to 23 to ensure it turns off the RGB led completely at its minimum state.)
+  // Check Potentiometer position (my potentiometer is finicky so I constrain its minimum to 23 to ensure its minimum state will completely turn off the LED.)
   int potPos = lastPotPos;
   if (millis() - lastPotPoll > 50) {
     lastPotPoll = millis();
