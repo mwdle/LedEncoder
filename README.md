@@ -1,5 +1,5 @@
 # RotaryHueControl
-Allows for color control of a Common Anode RGB LED diode using a 5 pin 360° rotary encoder and a basic rotary potentiometer.    <br><br>    
+Control colors on a Common Anode RGB LED diode using a 5 pin 360° rotary encoder and a basic rotary potentiometer, or web interface commands.    <br><br>    
 <p align="center">
   <img src="demo.gif" alt="animated" />
 </p>        
