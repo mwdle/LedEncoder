@@ -14,7 +14,7 @@ The following libraries are required (for basic and network functions):
 * [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)    <br><br>
 
 ## Functionality:
-* 360° Rotary Encoder color controls - spinning the rotary encoder will cycle the LED diodes through the color spectrum.
+* 360° Rotary encoder color controls - spinning the rotary encoder will cycle the LED diodes through the color spectrum.
     * Rotary encoder power controls - pressing the rotary encoder's built-in button will toggle the power state of the LED diodes.
 * Potentiometer brightness controls - spinning the potentiometer will modify the brightness level of the LED diodes.
 * Internet Serial Interface - includes WebSerial library to allow serial monitoring and input over Wi-Fi.
@@ -23,7 +23,7 @@ The following libraries are required (for basic and network functions):
     * /state - Reports whether or not the light is on.
     * /restart - restarts the ESP device.
 * Internet connection status indicator: Red onboard LED will turn on anytime the ESP is not connected to a Wi-Fi network.
-* OTA Updates - includes ElegantOTA library to allow for Over-The-Air software updates.
+* OTA Updates - includes ElegantOTA library to allow for Over-The-Air firmware updates.
 
 ### Coming Soon:
  * Support for multiple LED's with different colors using a serial shift register.
