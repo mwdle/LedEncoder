@@ -10,12 +10,23 @@
 #include <ElegantOTA.h>
 #include <WebSerial.h>
 #include <EncoderStepCounter.h>
+#include <ShiftRegister74HC595.h>
 
-#define encoderPin1 D2
-#define encoderPin2 D1
-#define button D3
+#define RX 3
+#define TX 1
+
+// Define Encoder and potentiometer pins.
+#define encoderPin1 D6
+#define encoderPin2 RX
+#define button TX
 #define pot A0
+
 #define errorLed D0
+
+// Define shift register pins.
+#define latchPin D8
+#define clockPin D5
+#define dataPin D7
 
 using std::smatch;
 using std::regex;
@@ -32,6 +43,8 @@ IPAddress ip(192, 168, 0, 98);
 
 AsyncWebServer server(80);
 
+ShiftRegister74HC595<1> shiftRegister(dataPin, clockPin, latchPin);
+
 // Initialize rotary encoder
 EncoderStepCounter encoder(encoderPin1, encoderPin2);
 
@@ -42,9 +55,9 @@ int lastEncoderPos = 0;
 int lastPotPos = 100;
 
 // LED variables
-const int redPin1 = D5;
-const int bluePin1 = D7;
-const int greenPin1 = D6;
+const int redPin = D1;
+const int bluePin = D3;
+const int greenPin = D2;
 
 bool lightIsOn = true;
 volatile bool buttonClicked = false;
@@ -132,7 +145,7 @@ void recvMsg(uint8_t *data, size_t len) {
     currentColor.g = constrain(stoi(match[2]), 0, 255); 
     currentColor.b = constrain(stoi(match[3]), 0, 255);
     ESP.wdtFeed();
-    setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+    setColor(currentColor.r, currentColor.g, currentColor.b, redPin, greenPin, bluePin);
     WebSerial.printf("Color command received. The new color: (%d, %d, %d) has been set.\n", currentColor.r, currentColor.g, currentColor.b);
   }
   else if (regex_match(msg, match, restartCmd)) {
@@ -179,9 +192,9 @@ void setup(void) {
   server.begin();
 
   // LED pin Setup
-  pinMode(redPin1, OUTPUT);
-  pinMode(greenPin1, OUTPUT);
-  pinMode(bluePin1, OUTPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
 
   // Initialize Encoder Button Pin
   pinMode(button, INPUT_PULLUP);
@@ -191,7 +204,7 @@ void setup(void) {
   encoder.begin();
   encoder.setPosition(-128);
 
-  setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+  setColor(currentColor.r, currentColor.g, currentColor.b, redPin, greenPin, bluePin);
 }
 
 void loop(void) {
@@ -211,7 +224,7 @@ void loop(void) {
       lastEncoderPos += 1;
     }
     buttonClicked = false;
-  }
+  } 
 
   // Check Potentiometer position (my potentiometer is finicky so I constrain its minimum to 23 to ensure its minimum state will completely turn off the LED.)
   int potPos = lastPotPos;
@@ -227,7 +240,7 @@ void loop(void) {
     if (pos != lastEncoderPos || potPos != lastPotPos) {
       lastEncoderPos = pos; lastPotPos = potPos;
       currentColor = hsvToRgb(map(lastEncoderPos, -128, 127, 0, 360), 100.0, lastPotPos);
-      setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+      setColor(currentColor.r, currentColor.g, currentColor.b, redPin, greenPin, bluePin);
       WebSerial.printf("R: %d   G: %d   B: %d\n", currentColor.r, currentColor.g, currentColor.b);
     }
   }
@@ -236,7 +249,15 @@ void loop(void) {
       currentColor.r = off.r;
       currentColor.g = off.g;
       currentColor.b = off.b;
-      setColor(currentColor.r, currentColor.g, currentColor.b, redPin1, greenPin1, bluePin1);
+      setColor(currentColor.r, currentColor.g, currentColor.b, redPin, greenPin, bluePin);
     }
+    for (int i = 1; i < 6; i++) {
+      shiftRegister.set(i, HIGH);
+      delay(250);
+      if (!(i==1))
+        shiftRegister.set(i-1, LOW);
+    }
+    delay(250);
+    shiftRegister.set(5, LOW);
   }
 }
