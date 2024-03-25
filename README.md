@@ -4,7 +4,7 @@ Control colors on a Common Anode RGB LED diode using a 5 pin 360° rotary encode
   <img src="rotaryDemo.gif" alt="animated" width="45%"/>
   <img src="potDemo.gif" alt="animated" width = "45%"/>
   <img src="wsColor.png" alt="WebSerial Color Command" width = 45%/>
-  <img src="wsColor.png" alt="WebSerial State Command" width = 45%/>
+  <img src="wsState.png" alt="WebSerial State Command" width = 45%/>
 </p>        
 
 # Specifications and Pinout
