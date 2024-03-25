@@ -1,8 +1,8 @@
 # RotaryHueControl
 Control colors on a Common Anode RGB LED diode using a 5 pin 360° rotary encoder and a basic rotary potentiometer, or web interface commands.    <br><br>    
 <p align="center" float="left">
-  <img src="rotaryDemo.gif" alt="animated" width="40%"/>
-  <img src="potDemo.gif" alt="animated" width = "40%"/>
+  <img src="rotaryDemo.gif" alt="animated" width="45%"/>
+  <img src="potDemo.gif" alt="animated" width = "45%"/>
   <img src="wsColor.png" alt="WebSerial Color Command" width = 45%/>
   <img src="wsColor.png" alt="WebSerial State Command" width = 45%/>
 </p>        
