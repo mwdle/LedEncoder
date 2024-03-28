@@ -8,7 +8,7 @@ Control colors on a Common Anode RGB LED diode using a 5 pin 360° rotary encode
 </p>        
 
 # Specifications and Pinout
-All builds were created and tested using the PlatformIO IDE extension for VSCode and Espressif ESP8266 12-E board paired with a rotary encoder from an old alarm clock. Mileage may vary using other boards, IDE's, and rotary encoders.    <br><br>    
+All builds were created and tested using the PlatformIO IDE extension for VSCode and Espressif ESP8266 NodeMCU board paired with a rotary encoder from an old alarm clock. Mileage may vary using other boards, IDE's, and rotary encoders.    <br><br>    
 
 The following libraries are required (for basic and network functions):
 * [Elegant OTA](https://github.com/ayushsharma82/ElegantOTA)
