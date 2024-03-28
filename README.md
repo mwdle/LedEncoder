@@ -20,25 +20,22 @@ The following libraries are required (for basic and network functions):
 * 360° Rotary encoder color controls - spinning the rotary encoder will cycle the LED diodes through the color spectrum.
     * Rotary encoder power controls - pressing the rotary encoder's built-in button will toggle the power state of the LED diodes.
 * Potentiometer brightness controls - spinning the potentiometer will modify the brightness level of the LED diodes.
-* Internet Serial Interface - includes WebSerial library to allow serial monitoring and input over Wi-Fi (http://espIP/webserial)
+* Internet Serial Interface - includes WebSerial library to allow serial monitoring and input over Wi-Fi (http://<espIP>/webserial)
 * Internet based controls via WebSerial input:
     * /color r g b - Allows you to set the LED color to a specific RGB value.
     * /state - Reports whether or not the light is on.
     * /restart - restarts the ESP device.
 * Internet connection status indicator: Red onboard LED will turn on anytime the ESP is not connected to a Wi-Fi network.
-* OTA Updates - includes ElegantOTA library to allow for Over-The-Air firmware updates (http://espIP/update).
-
-### Coming Soon:
- * Support for multiple LED's with different colors using a serial shift register.
+* OTA Updates - includes ElegantOTA library to allow for Over-The-Air firmware updates (http://<espIP>/update).
 
 ## Pinout Info:
-* encoderPin1 is the 'a' pin on your rotary encoder. This program uses pin D2 on the ESP8266 12-E.
-* encoderPin2 is the 'b' pin on your rotary encoder. This program uses pin D1 on the ESP8266 12-E.
-* button is the button pin on your rotary encoder. This program uses D3 on the ESP8266 12-E.
-* pot is the output pin on your potentiometer. This program uses A0 (ADC Pin) on the ESP8266 12-E.
-* redPin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D5 on the ESP8266 12-E.
-* greenPin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D6 on the ESP8266 12-E.
-* bluePin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D7 on the ESP8266 12-E.
-* errorLED is the pin of your onboard red LED. This program uses pin 16 on the ESP8266 12-E.
+* encoderPin1 is the 'a' pin on your rotary encoder. This program uses pin D2 on the ESP8266 NodeMCU.
+* encoderPin2 is the 'b' pin on your rotary encoder. This program uses pin D1 on the ESP8266 NodeMCU.
+* button is the button pin on your rotary encoder. This program uses D3 on the ESP8266 NodeMCU.
+* pot is the output pin on your potentiometer. This program uses A0 (ADC Pin) on the ESP8266 NodeMCU.
+* redPin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D5 on the ESP8266 NodeMCU.
+* greenPin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D6 on the ESP8266 NodeMCU.
+* bluePin is the red pin on your _Common Anode_ RGB LED diode. This program uses pin D7 on the ESP8266 NodeMCU.
+* errorLED is the pin of your onboard red LED. This program uses pin 16 on the ESP8266 NodeMCU.
 ## Network Info:
 This program requires internet to function - make sure to change the ssid and password variables in main.cpp to match your network settings. You may also need to change the subnet, gateway, and local_ip variables.    <br>
