@@ -20,13 +20,13 @@ The following libraries are required (for basic and network functions):
 * 360° Rotary encoder color controls - spinning the rotary encoder will cycle the LED diodes through the color spectrum.
     * Rotary encoder power controls - pressing the rotary encoder's built-in button will toggle the power state of the LED diodes.
 * Potentiometer brightness controls - spinning the potentiometer will modify the brightness level of the LED diodes.
-* Internet Serial Interface - includes WebSerial library to allow serial monitoring and input over Wi-Fi.
+* Internet Serial Interface - includes WebSerial library to allow serial monitoring and input over Wi-Fi (http://espIP/webserial)
 * Internet based controls via WebSerial input:
     * /color r g b - Allows you to set the LED color to a specific RGB value.
     * /state - Reports whether or not the light is on.
     * /restart - restarts the ESP device.
 * Internet connection status indicator: Red onboard LED will turn on anytime the ESP is not connected to a Wi-Fi network.
-* OTA Updates - includes ElegantOTA library to allow for Over-The-Air firmware updates.
+* OTA Updates - includes ElegantOTA library to allow for Over-The-Air firmware updates (http://espIP/update).
 
 ### Coming Soon:
  * Support for multiple LED's with different colors using a serial shift register.
